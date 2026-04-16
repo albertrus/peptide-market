@@ -12,17 +12,23 @@ interface Props {
 
 function highlight(text: string, query: string): React.ReactNode {
   if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) return text;
-  return (
-    <>
-      {text.slice(0, idx)}
-      <mark className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
+  const lower = text.toLowerCase();
+  const lowerQuery = query.toLowerCase();
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
+  let idx = lower.indexOf(lowerQuery, cursor);
+  while (idx !== -1) {
+    if (idx > cursor) parts.push(text.slice(cursor, idx));
+    parts.push(
+      <mark key={idx} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5">
         {text.slice(idx, idx + query.length)}
       </mark>
-      {text.slice(idx + query.length)}
-    </>
-  );
+    );
+    cursor = idx + query.length;
+    idx = lower.indexOf(lowerQuery, cursor);
+  }
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return <>{parts}</>;
 }
 
 export default function SearchBar({ categories, vendors }: Props) {

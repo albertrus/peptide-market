@@ -17,7 +17,9 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
 const STORAGE_KEY = "vendor-sort";
 
 function parsePurity(purity: string): number {
-  return parseFloat(purity.replace(/[^0-9.]/g, "")) || 0;
+  // Extract the first valid decimal number from the string (e.g. "98%+", "99.5%+")
+  const match = purity.match(/(\d+(?:\.\d+)?)/);
+  return match ? parseFloat(match[1]) : 0;
 }
 
 function sortVendors(vendors: Vendor[], key: SortKey): Vendor[] {
