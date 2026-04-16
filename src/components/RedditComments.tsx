@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
 import { RedditThread, RedditComment } from "@/lib/types";
 import { ArrowUp, MessageSquare, ExternalLink } from "lucide-react";
 
@@ -41,7 +42,7 @@ function Comment({ comment, depth = 0 }: { comment: RedditComment; depth?: numbe
         <>
           <div className="mt-1 text-sm text-gray-800 leading-relaxed prose prose-sm max-w-none
                           prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline">
-            <ReactMarkdown>{comment.body}</ReactMarkdown>
+            <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{comment.body}</ReactMarkdown>
           </div>
           {comment.replies.length > 0 && (
             <div>

@@ -6,6 +6,8 @@ interface MetricItem {
   label: string;
   value: string;
   sub?: string;
+  /** Optional accessible label for the value (e.g. for star-character fields) */
+  ariaValue?: string;
 }
 
 export default function VendorMetrics({ metrics }: { metrics: Metrics }) {
@@ -69,6 +71,7 @@ export default function VendorMetrics({ metrics }: { metrics: Metrics }) {
             icon: <DollarSign className="h-4 w-4 text-emerald-500" />,
             label: "Price",
             value: "★".repeat(metrics.priceCompetitiveness) + "☆".repeat(5 - metrics.priceCompetitiveness),
+            ariaValue: `${metrics.priceCompetitiveness} out of 5`,
           } satisfies MetricItem,
         ]
       : []),
@@ -95,7 +98,7 @@ export default function VendorMetrics({ metrics }: { metrics: Metrics }) {
               {item.icon}
               {item.label}
             </div>
-            <p className="text-sm font-semibold text-gray-900">{item.value}</p>
+            <p className="text-sm font-semibold text-gray-900" aria-label={item.ariaValue}>{item.value}</p>
             {item.sub && <p className="text-xs text-gray-400">{item.sub}</p>}
           </div>
         ))}
