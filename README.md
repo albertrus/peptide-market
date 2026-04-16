@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Peptide Vendor Marketplace
+
+A Next.js marketplace app for comparing research peptide vendors, prices, and community discussions.
+
+## Features
+
+- **Product catalog** — Browse 6 research peptides (BPC-157, TB-500, CJC-1295, Ipamorelin, Semaglutide, Tirzepatide)
+- **Vendor comparison** — Per-product price, purity, quantity, and stock status table
+- **Vendor directory** — Browse and compare trusted suppliers with star ratings
+- **Reddit integration** — Community discussions from r/Peptides per product
+- **Authentication** — Login/register with NextAuth.js (JWT strategy)
+- **Favorites** — Save favorite vendors (requires login, stored in localStorage)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Demo credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Email: `alice@example.com`
+- Password: `password`
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js 16](https://nextjs.org) with App Router and TypeScript
+- [Tailwind CSS](https://tailwindcss.com) for styling (system fonts)
+- [NextAuth.js](https://next-auth.js.org) for authentication
+- Static mock data in `src/lib/data.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Description | Default |
+|---|---|---|
+| `NEXTAUTH_SECRET` | JWT signing secret | `dev-secret-change-in-production` |
+| `NEXTAUTH_URL` | App base URL | `http://localhost:3000` |
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> **Note:** Always set `NEXTAUTH_SECRET` to a strong random value in production.
