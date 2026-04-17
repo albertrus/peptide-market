@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { Category, Vendor } from "@/lib/types";
@@ -33,8 +33,20 @@ function highlight(text: string, query: string): React.ReactNode {
 
 export default function SearchBar({ categories, vendors }: Props) {
   const [query, setQuery] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const trimmed = query.trim();
+
+  useEffect(() => {
+    if (!trimmed) return;
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [trimmed]);
 
   const matchedCategories = useMemo(() => {
     if (!trimmed) return [];
@@ -58,7 +70,7 @@ export default function SearchBar({ categories, vendors }: Props) {
   const hasResults = matchedCategories.length > 0 || matchedVendors.length > 0;
 
   return (
-    <div className="relative mb-10">
+    <div className="relative mb-10" ref={containerRef}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
         <input
