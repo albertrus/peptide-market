@@ -1,11 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, FlaskConical } from "lucide-react";
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -33,9 +65,13 @@ export default function Navigation() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
+          ref={triggerRef}
+          className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 min-h-[44px] min-w-[44px]
+                     flex items-center justify-center"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -43,15 +79,27 @@ export default function Navigation() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-3 text-sm font-medium text-gray-700">
-          <Link href="/" className="block hover:text-brand-600" onClick={() => setOpen(false)}>
+        <div
+          id="mobile-menu"
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          className="md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-3 text-sm font-medium text-gray-700"
+        >
+          <Link
+            href="/"
+            className="block hover:text-brand-600 min-h-[44px] flex items-center"
+            onClick={() => setOpen(false)}
+          >
             Categories
           </Link>
           <a
             href={`https://www.reddit.com/r/${process.env.NEXT_PUBLIC_REDDIT_SUBREDDIT ?? "peptidemarket"}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block hover:text-brand-600"
+            className="block hover:text-brand-600 min-h-[44px] flex items-center"
+            onClick={() => setOpen(false)}
           >
             Community ↗
           </a>

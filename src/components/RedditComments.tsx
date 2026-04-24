@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
 import { RedditThread, RedditComment } from "@/lib/types";
 import { ArrowUp, MessageSquare, ExternalLink } from "lucide-react";
 
@@ -14,6 +16,9 @@ function timeAgo(utcSeconds: number): string {
 
 function Comment({ comment, depth = 0 }: { comment: RedditComment; depth?: number }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [showReplies, setShowReplies] = useState(depth < 2);
+
+  const isDeep = depth >= 2;
 
   return (
     <div className={depth > 0 ? "ml-4 border-l-2 border-gray-100 pl-3 mt-2" : "mt-4"}>
@@ -27,6 +32,7 @@ function Comment({ comment, depth = 0 }: { comment: RedditComment; depth?: numbe
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="ml-auto text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label={collapsed ? "Expand comment" : "Collapse comment"}
         >
           {collapsed ? "[+]" : "[–]"}
         </button>
@@ -34,18 +40,46 @@ function Comment({ comment, depth = 0 }: { comment: RedditComment; depth?: numbe
 
       {!collapsed && (
         <>
-          <p className="mt-1 text-sm text-gray-800 whitespace-pre-line leading-relaxed">
-            {comment.body}
-          </p>
+          <div className="mt-1 text-sm text-gray-800 leading-relaxed prose prose-sm max-w-none
+                          prose-a:text-brand-600 prose-a:no-underline hover:prose-a:underline">
+            <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{comment.body}</ReactMarkdown>
+          </div>
           {comment.replies.length > 0 && (
             <div>
-              {comment.replies.map((reply) => (
-                <Comment key={reply.id} comment={reply} depth={depth + 1} />
-              ))}
+              {isDeep && !showReplies ? (
+                <button
+                  onClick={() => setShowReplies(true)}
+                  className="mt-1 text-xs text-brand-600 hover:underline"
+                >
+                  Show {comment.replies.length} more repl{comment.replies.length === 1 ? "y" : "ies"}
+                </button>
+              ) : (
+                showReplies &&
+                comment.replies.map((reply) => (
+                  <Comment key={reply.id} comment={reply} depth={depth + 1} />
+                ))
+              )}
             </div>
           )}
         </>
       )}
+    </div>
+  );
+}
+
+function Skeleton() {
+  return (
+    <div className="animate-pulse space-y-4 mt-4" aria-hidden="true">
+      {[1, 2, 3].map((n) => (
+        <div key={n} className="space-y-2">
+          <div className="flex gap-2">
+            <div className="h-3 w-20 bg-gray-200 rounded" />
+            <div className="h-3 w-8 bg-gray-200 rounded" />
+          </div>
+          <div className="h-3 w-full bg-gray-100 rounded" />
+          <div className="h-3 w-4/5 bg-gray-100 rounded" />
+        </div>
+      ))}
     </div>
   );
 }
@@ -75,30 +109,36 @@ export default function RedditComments({ threadId, vendorName }: Props) {
     load();
   }, [threadId]);
 
-  if (loading) {
-    return (
-      <div className="animate-pulse space-y-3 mt-4">
-        {[1, 2, 3].map((n) => (
-          <div key={n} className="h-14 bg-gray-100 rounded-lg" />
-        ))}
-      </div>
-    );
-  }
+  const subreddit = process.env.NEXT_PUBLIC_REDDIT_SUBREDDIT ?? "peptidemarket";
+
+  if (loading) return <Skeleton />;
 
   if (error || !thread) {
     return (
-      <p className="text-sm text-gray-500 mt-4">
-        Could not load Reddit discussion. Check back later or{" "}
+      <div className="space-y-3 mt-4">
+        <p className="text-sm text-gray-500">
+          Could not load Reddit discussion. Check back later or{" "}
+          <a
+            href={`https://www.reddit.com/r/${subreddit}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-600 underline"
+          >
+            browse the subreddit
+          </a>
+          .
+        </p>
         <a
-          href={`https://www.reddit.com/r/${process.env.NEXT_PUBLIC_REDDIT_SUBREDDIT ?? "peptidemarket"}`}
+          href={`https://www.reddit.com/r/${subreddit}/submit?title=Vendor+Review%3A+${encodeURIComponent(vendorName)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand-600 underline"
+          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600
+                     text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
-          browse the subreddit
+          <MessageSquare className="h-4 w-4" />
+          Add your review on Reddit
         </a>
-        .
-      </p>
+      </div>
     );
   }
 

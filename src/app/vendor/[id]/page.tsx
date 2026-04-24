@@ -82,9 +82,6 @@ export default function VendorPage({ params }: Props) {
       <section className="mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-3">Vendor metrics</h2>
         <VendorMetrics metrics={vendor.metrics} />
-        <p className="text-xs text-gray-400 mt-2">
-          * Metrics sourced from community data. More metrics coming soon.
-        </p>
       </section>
 
       {/* Products */}

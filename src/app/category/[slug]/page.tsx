@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { categories, products, vendors } from "@/lib/data";
-import VendorCard from "@/components/VendorCard";
+import VendorList from "@/components/VendorList";
 
 interface Props {
   params: { slug: string };
@@ -61,17 +61,7 @@ export default function CategoryPage({ params }: Props) {
                 <p className="text-sm text-gray-500 mt-0.5">{product.description}</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
-                {productVendors.length === 0 ? (
-                  <p className="p-4 text-sm text-gray-400">No vendors listed yet.</p>
-                ) : (
-                  productVendors
-                    .sort((a, b) => b.metrics.overallRating - a.metrics.overallRating)
-                    .map((vendor) => (
-                      <VendorCard key={vendor.id} vendor={vendor} compact />
-                    ))
-                )}
-              </div>
+              <VendorList vendors={productVendors} />
             </section>
           );
         })}

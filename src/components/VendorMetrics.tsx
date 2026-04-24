@@ -1,8 +1,17 @@
 import { VendorMetrics as Metrics } from "@/lib/types";
-import { Star, FlaskConical, Truck, Clock, Zap, ArrowUp } from "lucide-react";
+import { Star, FlaskConical, Truck, Clock, Zap, ArrowUp, Timer, RefreshCw, DollarSign, Package } from "lucide-react";
+
+interface MetricItem {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub?: string;
+  /** Optional accessible label for the value (e.g. for star-character fields) */
+  ariaValue?: string;
+}
 
 export default function VendorMetrics({ metrics }: { metrics: Metrics }) {
-  const items = [
+  const items: MetricItem[] = [
     {
       icon: <Star className="h-4 w-4 text-amber-400" />,
       label: "Rating",
@@ -35,26 +44,66 @@ export default function VendorMetrics({ metrics }: { metrics: Metrics }) {
             icon: <ArrowUp className="h-4 w-4 text-orange-500" />,
             label: "Reddit Score",
             value: metrics.redditScore.toLocaleString(),
-          },
+          } satisfies MetricItem,
+        ]
+      : []),
+    ...(metrics.avgShippingDays !== undefined
+      ? [
+          {
+            icon: <Timer className="h-4 w-4 text-sky-500" />,
+            label: "Avg. Shipping",
+            value: `${metrics.avgShippingDays} day${metrics.avgShippingDays === 1 ? "" : "s"}`,
+          } satisfies MetricItem,
+        ]
+      : []),
+    ...(metrics.reorderRate !== undefined
+      ? [
+          {
+            icon: <RefreshCw className="h-4 w-4 text-teal-500" />,
+            label: "Reorder Rate",
+            value: `${metrics.reorderRate}%`,
+          } satisfies MetricItem,
+        ]
+      : []),
+    ...(metrics.priceCompetitiveness !== undefined
+      ? [
+          {
+            icon: <DollarSign className="h-4 w-4 text-emerald-500" />,
+            label: "Price",
+            value: "★".repeat(metrics.priceCompetitiveness) + "☆".repeat(5 - metrics.priceCompetitiveness),
+            ariaValue: `${metrics.priceCompetitiveness} out of 5`,
+          } satisfies MetricItem,
+        ]
+      : []),
+    ...(metrics.productVariety !== undefined
+      ? [
+          {
+            icon: <Package className="h-4 w-4 text-violet-500" />,
+            label: "SKUs",
+            value: metrics.productVariety.toLocaleString(),
+          } satisfies MetricItem,
         ]
       : []),
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {items.map((item) => (
-        <div
-          key={item.label}
-          className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-1"
-        >
-          <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
-            {item.icon}
-            {item.label}
+    <div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {items.map((item) => (
+          <div
+            key={item.label}
+            className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-1"
+          >
+            <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+              {item.icon}
+              {item.label}
+            </div>
+            <p className="text-sm font-semibold text-gray-900" aria-label={item.ariaValue}>{item.value}</p>
+            {item.sub && <p className="text-xs text-gray-400">{item.sub}</p>}
           </div>
-          <p className="text-sm font-semibold text-gray-900">{item.value}</p>
-          {item.sub && <p className="text-xs text-gray-400">{item.sub}</p>}
-        </div>
-      ))}
+        ))}
+      </div>
+      <p className="text-xs text-gray-400 mt-2 italic">More metrics coming soon.</p>
     </div>
   );
 }

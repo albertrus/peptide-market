@@ -8,7 +8,7 @@ interface Props {
   compact?: boolean;
 }
 
-function StarRating({ rating }: { rating: number }) {
+function StarRating({ rating, totalReviews }: { rating: number; totalReviews: number }) {
   return (
     <span className="flex items-center gap-0.5" aria-label={`${rating} out of 5`}>
       {Array.from({ length: 5 }).map((_, i) => (
@@ -20,13 +20,10 @@ function StarRating({ rating }: { rating: number }) {
         />
       ))}
       <span className="ml-1 text-xs text-gray-500">
-        {rating.toFixed(1)} ({vendor.metrics.totalReviews})
+        {rating.toFixed(1)} ({totalReviews})
       </span>
     </span>
   );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function vendor(_: never): never { throw 0; }
 }
 
 export default function VendorCard({ vendor, compact = false }: Props) {
@@ -34,7 +31,7 @@ export default function VendorCard({ vendor, compact = false }: Props) {
     return (
       <Link
         href={`/vendor/${vendor.slug}`}
-        className="flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50
+        className="flex items-center justify-between py-3 px-4 min-h-[44px] rounded-lg hover:bg-gray-50
                    border border-transparent hover:border-gray-200 transition-all group"
       >
         <div>
@@ -42,19 +39,10 @@ export default function VendorCard({ vendor, compact = false }: Props) {
             {vendor.name}
           </span>
           <div className="flex items-center gap-3 mt-0.5">
-            <span className="flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3 w-3 ${
-                    i < Math.round(vendor.metrics.overallRating)
-                      ? "text-amber-400 fill-amber-400"
-                      : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </span>
-            <span className="text-xs text-gray-500">{vendor.metrics.overallRating.toFixed(1)}</span>
+            <StarRating
+              rating={vendor.metrics.overallRating}
+              totalReviews={vendor.metrics.totalReviews}
+            />
             <span className="text-xs text-gray-400">{vendor.metrics.purity} purity</span>
           </div>
         </div>
@@ -92,12 +80,14 @@ export default function VendorCard({ vendor, compact = false }: Props) {
         )}
       </div>
 
+      <div className="mt-3">
+        <StarRating
+          rating={vendor.metrics.overallRating}
+          totalReviews={vendor.metrics.totalReviews}
+        />
+      </div>
+
       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-600">
-        <span className="flex items-center gap-1">
-          <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-          {vendor.metrics.overallRating.toFixed(1)}{" "}
-          <span className="text-gray-400">({vendor.metrics.totalReviews} reviews)</span>
-        </span>
         <span className="flex items-center gap-1">
           <FlaskConical className="h-3.5 w-3.5 text-blue-500" />
           {vendor.metrics.labTesting}

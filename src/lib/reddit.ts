@@ -1,4 +1,5 @@
 import { RedditComment, RedditThread } from "./types";
+import type { Vendor } from "./types";
 
 const SUBREDDIT = process.env.NEXT_PUBLIC_REDDIT_SUBREDDIT ?? "peptidemarket";
 const USER_AGENT = process.env.REDDIT_USER_AGENT ?? "PeptideMarketplace/1.0";
@@ -80,4 +81,17 @@ export async function fetchRedditThread(
   } catch {
     return null;
   }
+}
+
+/**
+ * Returns the full Reddit thread URL for a vendor, or null if no thread is linked.
+ *
+ * To wire up a real thread ID for a vendor:
+ *   1. Create a post in r/${NEXT_PUBLIC_REDDIT_SUBREDDIT} for the vendor (e.g. "Vendor Review: Paradigm Peptides")
+ *   2. Copy the post ID from the URL: reddit.com/r/<subreddit>/comments/<threadId>/...
+ *   3. Set `redditThreadId: "<threadId>"` on the matching vendor object in src/lib/data.ts
+ */
+export function getRedditThreadUrl(vendor: Vendor): string | null {
+  if (!vendor.redditThreadId) return null;
+  return `https://www.reddit.com/r/${SUBREDDIT}/comments/${vendor.redditThreadId}/`;
 }

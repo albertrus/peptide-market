@@ -1,11 +1,12 @@
 import { categories, products, vendors } from "@/lib/data";
 import CategoryCard from "@/components/CategoryCard";
+import SearchBar from "@/components/SearchBar";
 
 export default function HomePage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       {/* Hero */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
           Research Peptide Vendor Directory
         </h1>
@@ -14,6 +15,9 @@ export default function HomePage() {
           Powered by Reddit discussions.
         </p>
       </div>
+
+      {/* Search */}
+      <SearchBar categories={categories} vendors={vendors} />
 
       {/* Category grid */}
       <h2 className="text-lg font-semibold text-gray-700 mb-4">Browse by category</h2>
