@@ -1,42 +1,64 @@
 'use client';
-import { useState, useEffect } from 'react';
 
-interface FavoriteButtonProps {
+import { useSyncExternalStore } from 'react';
+import {
+  getServerSnapshot,
+  getSnapshot,
+  subscribe,
+  toggleFavorite,
+} from '@/lib/favorites';
+
+/**
+ * Save a vendor to the local saved list.
+ *
+ * Reads from the shared store rather than keeping its own copy, so every
+ * instance of this button on a page agrees about what is saved.
+ *
+ * Accessibility: the label names the vendor instead of repeating "Add to
+ * favorites" five times on one page, and the on state is exposed through
+ * aria-pressed rather than colour alone.
+ */
+export default function FavoriteButton({
+  vendorId,
+  vendorName,
+}: {
   vendorId: string;
-}
-
-export default function FavoriteButton({ vendorId }: FavoriteButtonProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  useEffect(() => {
-    const favorites: string[] = JSON.parse(localStorage.getItem('favorites') || '[]');
-    setIsFavorite(favorites.includes(vendorId));
-  }, [vendorId]);
-
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const favorites: string[] = JSON.parse(localStorage.getItem('favorites') || '[]');
-    let updated: string[];
-    if (favorites.includes(vendorId)) {
-      updated = favorites.filter((id) => id !== vendorId);
-    } else {
-      updated = [...favorites, vendorId];
-    }
-    localStorage.setItem('favorites', JSON.stringify(updated));
-    setIsFavorite(updated.includes(vendorId));
-  };
+  vendorName: string;
+}) {
+  const favorites = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
+  const isFavorite = favorites.includes(vendorId);
 
   return (
     <button
-      onClick={toggleFavorite}
-      aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-      className={`p-2 rounded-full transition-colors ${
-        isFavorite ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-yellow-500'
+      type="button"
+      onClick={() => toggleFavorite(vendorId)}
+      aria-pressed={isFavorite}
+      aria-label={
+        isFavorite ? `Remove ${vendorName} from saved` : `Save ${vendorName}`
+      }
+      className={`shrink-0 rounded-md p-1.5 transition-colors ${
+        isFavorite
+          ? 'text-accent hover:text-accent-ink'
+          : 'text-ink-subtle hover:text-accent'
       }`}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} className="w-6 h-6">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+      <svg
+        aria-hidden="true"
+        className="size-5"
+        viewBox="0 0 24 24"
+        fill={isFavorite ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth={1.8}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M17.6 3.5a5 5 0 0 0-5.6 1.2 5 5 0 0 0-8.5 3.6c0 4.5 5.9 8.2 8.5 10.7 2.6-2.5 8.5-6.2 8.5-10.7a5 5 0 0 0-2.9-4.8Z"
+        />
       </svg>
     </button>
   );
