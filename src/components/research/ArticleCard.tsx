@@ -1,4 +1,5 @@
 import ExternalLink from '@/components/ExternalLink';
+import SaveButton from '@/components/SaveButton';
 import type { Article } from '@/lib/research';
 
 /**
@@ -26,13 +27,23 @@ function authorLine(authors: string[]): string {
 export default function ArticleCard({ article }: { article: Article }) {
   return (
     <li className="rounded-lg border border-line bg-surface p-5 transition-shadow hover:shadow-sm">
-      {article.publicationTypes.length > 0 && (
-        <div className="mb-3 flex flex-wrap gap-1.5">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex flex-wrap gap-1.5">
           {article.publicationTypes.slice(0, 3).map((type) => (
             <TypeChip key={type} type={type} />
           ))}
         </div>
-      )}
+        <SaveButton
+          variant="labelled"
+          item={{
+            kind: 'paper',
+            id: article.pmid,
+            title: article.title,
+            url: article.url,
+            subtitle: article.journal,
+          }}
+        />
+      </div>
 
       <h3 className="font-sans text-base font-semibold leading-snug text-ink">
         <ExternalLink

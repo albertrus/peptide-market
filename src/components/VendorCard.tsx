@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import ExternalLink from './ExternalLink';
-import FavoriteButton from './FavoriteButton';
+import SaveButton from './SaveButton';
 import type { Vendor } from '@/lib/vendors';
 
 /**
@@ -20,7 +20,17 @@ export default function VendorCard({ vendor }: { vendor: Vendor }) {
     <article className="flex h-full flex-col rounded-xl border border-line bg-surface p-6">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-lg font-semibold text-ink">{vendor.name}</h3>
-        {session && <FavoriteButton vendorId={vendor.id} vendorName={vendor.name} />}
+        {session && (
+          <SaveButton
+            item={{
+              kind: 'vendor',
+              id: vendor.id,
+              title: vendor.name,
+              url: vendor.url,
+              subtitle: vendor.basedIn ? `Ships from ${vendor.basedIn}` : undefined,
+            }}
+          />
+        )}
       </div>
 
       <div className="mt-2 flex flex-wrap gap-2">

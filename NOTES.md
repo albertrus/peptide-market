@@ -43,6 +43,20 @@ Design points worth knowing:
   say "229 open of 950 registered" rather than showing one number that quietly
   implies the other does not exist.
 
+### Reddit degrades quietly now
+
+**Update (later session).** Previously every condition and peptide page carried
+a red "could not load" panel, which made the whole site look broken over an
+optional feature. The panel now distinguishes two different things: Reddit
+being down (an error) and Reddit not being configured (not an error). Without
+credentials the section renders a calm note plus a link that runs the same
+search on Reddit directly, and does not call the API at all.
+
+Useful side effect: the 30 minute Reddit fetch was dragging the whole route's
+revalidate down to 30 minutes, because Next takes the minimum of the segment
+config and every fetch in it. With that call gone the condition and peptide
+pages sit at the 6 hours they were meant to.
+
 ### Reddit needs credentials now
 
 The old `RedditPosts` component fetched from the browser with a custom
@@ -339,21 +353,42 @@ Reddit is the one source that fails, for the credential reason in section 1.
    happy with the voice before you send anyone to the site.
 2. ~~Assign the six evidence tiers.~~ Done, from data. Read the notes and
    push back on any you disagree with, particularly ipamorelin.
-3. **Reddit credentials**, or drop the community panel. Right now every condition
-   page carries a visible error block.
+3. **Reddit credentials**, or drop the community panel. No longer urgent: it
+   degrades quietly now, but the section is dead weight until it is connected.
 4. **Decide about the vendor listings.** Either wire a real source for price and
    stock, or cut the table and let the site be purely a research directory. The
    placeholder banner is not a long-term answer.
 5. **Search across conditions and peptides.** The data layer already takes
    arbitrary query terms, so this is mostly UI.
-6. **Save trials and papers, not just vendors.** Saving a vendor is the least
-   useful thing on the site now. Saving "trials I want to ask my doctor about"
-   is the feature this audience would actually use. `src/lib/favorites.ts`
-   generalises to keyed collections without much work.
+6. ~~Save trials and papers, not just vendors.~~ Done. See below.
 7. **Dark mode**, properly, token by token.
 8. **Real auth.** Credentials are mock users in `src/lib/auth.ts` and
    `NEXTAUTH_SECRET` falls back to a hardcoded dev string. Fine for now,
    not fine in production.
+
+---
+
+## 12. Saved items (later session)
+
+`src/lib/favorites.ts` is gone, replaced by `src/lib/saved.ts`. Saving a vendor
+was the least useful thing on the site once it became a research directory; a
+list of specific trials to raise at an appointment is the thing this audience
+actually needs to keep.
+
+- One store, three kinds: `trial`, `paper`, `vendor`.
+- Trials and papers are not in the site's static data, so the display fields
+  (title, url, sponsor or journal) are stored alongside the identifier. A saved
+  item still renders if the upstream record changes, and the list never has to
+  hit an API to draw itself.
+- `SaveButton` appears on every trial card, every paper card, and both vendor
+  surfaces. It reads the shared store, so duplicates on a page agree.
+- `/favorites` permanently redirects to `/saved`. Anything saved under the old
+  `favorites` localStorage key is migrated on first visit and the old key is
+  removed. Verified working in the browser rather than assumed.
+- The saved page leads with trials and closes with a note that NCT numbers and
+  PMIDs travel better than links, because a clinician can look either up.
+
+Still device-local. Saving across devices needs the real auth in item 8.
 
 ---
 

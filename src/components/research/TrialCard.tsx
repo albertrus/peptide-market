@@ -1,4 +1,5 @@
 import ExternalLink from '@/components/ExternalLink';
+import SaveButton from '@/components/SaveButton';
 import { TRIAL_STATUS_META, type ClinicalTrial } from '@/lib/research';
 
 /**
@@ -51,14 +52,26 @@ function locationSummary(countries: string[]): string {
 export default function TrialCard({ trial }: { trial: ClinicalTrial }) {
   return (
     <li className="rounded-lg border border-line bg-surface p-5 transition-shadow hover:shadow-sm">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <TrialStatusBadge trial={trial} />
-        {trial.phase && <PhaseBadge phase={trial.phase} />}
-        {trial.studyType && (
-          <span className="text-xs font-medium text-ink-subtle">
-            {trial.studyType}
-          </span>
-        )}
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <TrialStatusBadge trial={trial} />
+          {trial.phase && <PhaseBadge phase={trial.phase} />}
+          {trial.studyType && (
+            <span className="text-xs font-medium text-ink-subtle">
+              {trial.studyType}
+            </span>
+          )}
+        </div>
+        <SaveButton
+          variant="labelled"
+          item={{
+            kind: 'trial',
+            id: trial.nctId,
+            title: trial.title,
+            url: trial.url,
+            subtitle: trial.sponsor ?? undefined,
+          }}
+        />
       </div>
 
       <h3 className="font-sans text-base font-semibold leading-snug text-ink">

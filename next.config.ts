@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
       // gone. Anything already pointing at it lands on the peptide it meant.
       { source: '/products', destination: '/peptides', permanent: true },
       { source: '/products/:id', destination: '/peptides/:id', permanent: true },
+      // Saving generalised from vendors to trials and papers.
+      { source: '/favorites', destination: '/saved', permanent: true },
     ];
   },
 };

@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import ExternalLink from './ExternalLink';
-import FavoriteButton from './FavoriteButton';
+import SaveButton from './SaveButton';
 import { getVendor, type VendorListing } from '@/lib/vendors';
 
 /**
@@ -82,9 +82,13 @@ export default function VendorComparisonTable({
                       </span>
                     )}
                     {session && (
-                      <FavoriteButton
-                        vendorId={vendor.id}
-                        vendorName={vendor.name}
+                      <SaveButton
+                        item={{
+                          kind: 'vendor',
+                          id: vendor.id,
+                          title: vendor.name,
+                          url: vendor.url,
+                        }}
                       />
                     )}
                   </span>

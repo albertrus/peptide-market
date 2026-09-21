@@ -3,6 +3,7 @@ import ExternalLink from '@/components/ExternalLink';
 import ResearchSection from './ResearchSection';
 import { ResearchEmptyState, ResearchErrorState } from './ResearchStates';
 import {
+  communityCredentialsConfigured,
   communitySearchUrl,
   searchCommunity,
   type CommunityQuery,
@@ -29,8 +30,34 @@ export default async function CommunityPanel({
   limit = 6,
 }: CommunityPanelProps) {
   const query: CommunityQuery = { subreddits, term, limit };
-  const result = await searchCommunity(query);
   const searchUrl = communitySearchUrl(query);
+
+  /*
+   * Without Reddit credentials this section can never load, so there is no
+   * point calling the API and no point shouting about it. An unconfigured
+   * optional feature is not an error, and rendering a red failure panel on
+   * every condition and peptide page makes the whole site look broken.
+   */
+  if (!communityCredentialsConfigured) {
+    return (
+      <ResearchSection
+        id={id}
+        title={title}
+        description="What people are saying in patient communities. This is lived experience, not evidence, and it is not reviewed by anyone."
+        source="reddit"
+        sourceUrl={searchUrl}
+        sourceLinkLabel="Search Reddit for this"
+      >
+        <ResearchEmptyState
+          message="Reddit discussion is not connected on this site. Reddit stopped serving its public feeds to unauthenticated callers, so pulling threads in now needs an API credential. The link below runs the same search on Reddit directly."
+          fallbackUrl={searchUrl}
+          fallbackLabel="Run this search on Reddit"
+        />
+      </ResearchSection>
+    );
+  }
+
+  const result = await searchCommunity(query);
 
   return (
     <ResearchSection

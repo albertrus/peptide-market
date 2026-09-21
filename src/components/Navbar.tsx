@@ -59,7 +59,7 @@ export default function Navbar() {
       label: c.shortName,
     })),
     ...staticLinks,
-    ...(session ? [{ href: '/favorites', label: 'Saved' }] : []),
+    ...(session ? [{ href: '/saved', label: 'Saved' }] : []),
   ];
 
   const isCurrent = (href: string) =>
