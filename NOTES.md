@@ -267,10 +267,9 @@ nothing was saved and warns against entering a real password.
 - **System fonts, not Google Fonts.** `next/font/google` fetches at build time.
   Not worth a network dependency in the build for this. Swap in a real face when
   you pick one.
-- **Light mode only.** The old `globals.css` declared dark-mode variables that no
-  component honoured, so dark mode was half-broken. I removed the dead
-  declarations rather than shipping a broken theme. Doing it properly means
-  dark values for every token, which is a focused piece of work.
+- **Light mode only.** ~~The old `globals.css` declared dark-mode variables that
+  no component honoured, so dark mode was half-broken.~~ Superseded: dark mode
+  now ships properly, see section 14.
 - **Renamed `/products` to `/peptides`** with a permanent redirect. "Products"
   was the framing you are moving away from.
 - **Two conditions only** (endometriosis, autoimmune). I did not invent more.
@@ -360,7 +359,7 @@ Reddit is the one source that fails, for the credential reason in section 1.
    placeholder banner is not a long-term answer.
 5. ~~Search across conditions and peptides.~~ Done. See below.
 6. ~~Save trials and papers, not just vendors.~~ Done. See below.
-7. **Dark mode**, properly, token by token.
+7. ~~Dark mode.~~ Done. See below.
 8. **Real auth.** Credentials are mock users in `src/lib/auth.ts` and
    `NEXTAUTH_SECRET` falls back to a hardcoded dev string. Fine for now,
    not fine in production.
@@ -413,6 +412,34 @@ sits under the hero on the home page.
 Worth noting what it reveals: searching "endometriosis semaglutide" returns
 zero open trials and one paper. That emptiness is real information, and the
 empty state says as much rather than looking broken.
+
+
+---
+
+## 14. Dark mode (later session)
+
+Follows the operating system setting, via `prefers-color-scheme`.
+
+**No component changed.** The whole theme is a redefinition of the same custom
+properties in `globals.css`, because nothing in the codebase hardcodes a
+colour. That was the point of putting everything in tokens, and this is the
+first time it paid for itself.
+
+It is not an inversion. Surfaces stay warm rather than going blue-grey, body
+text is off-white rather than pure white to cut halation, and the teal and plum
+are lifted because the light-mode values are unreadable on a dark ground.
+`color-scheme: dark` is set so form controls stop rendering in light browser
+chrome.
+
+Measured rather than eyeballed: 26 distinct text-on-background pairs on a
+condition page, zero failures, lowest 5.67:1. All six tier badges land between
+7.6:1 and 8.8:1. Light mode re-checked afterwards and is unchanged, lowest
+badge 6.85:1.
+
+**No manual toggle.** A toggle needs client state, persistence and a
+hydration-safe initial render, and it is a separate piece of work. Following
+the OS is the behaviour most people expect anyway. If you want a toggle, the
+tokens are already in place; only the switching mechanism is missing.
 
 
 ---

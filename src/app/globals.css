@@ -12,9 +12,13 @@
  * clear 6.5:1 against white. Every tier and status pair is dark ink on a light
  * tint for the same reason.
  *
- * Dark mode: deliberately not shipped. The previous version declared dark
- * variables that no component honoured, which left the page half-dark. See
- * NOTES.md.
+ * Dark mode follows the operating system setting. It works by redefining these
+ * same variables below, and needs no component changes at all, because nothing
+ * in the codebase hardcodes a colour. That was the point of the tokens.
+ *
+ * The earlier version of this file declared dark variables that no component
+ * honoured, which left the page half-dark. That is why this one redefines
+ * every token rather than a handful.
  */
 
 @theme {
@@ -97,6 +101,103 @@
   --color-notice-soft: #fdf4e3;
   --color-notice-ink: #6a4a11;
   --color-notice-line: #e9d5ab;
+}
+
+/*
+ * Dark mode.
+ *
+ * Not an inversion. Surfaces stay warm rather than going blue-grey, text is
+ * off-white rather than pure white to cut halation, and the teal and plum are
+ * lifted because the light-mode values are far too dark to read on a dark
+ * ground. Every pair below was measured against its actual background; the
+ * lowest is a little over 5:1 and most sit above 7:1.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surfaces */
+    --color-paper: #151312;
+    --color-surface: #1d1b19;
+    --color-surface-sunken: #262321;
+
+    /* Text */
+    --color-ink: #f2efeb;
+    --color-ink-muted: #bcb4ac;
+    --color-ink-subtle: #9b938b;
+
+    /* Lines */
+    --color-line: #332f2c;
+    --color-line-strong: #4a4541;
+
+    /* Primary: lifted teal */
+    --color-primary: #5cbdb6;
+    --color-primary-hover: #7ed0ca;
+    --color-primary-soft: #16332f;
+    --color-primary-ink: #8fd8d1;
+
+    /* Accent: lifted plum */
+    --color-accent: #cf94b1;
+    --color-accent-soft: #33222b;
+    --color-accent-ink: #e0b0c6;
+
+    /* Evidence tiers */
+    --color-tier-trial-soft: #16301f;
+    --color-tier-trial-ink: #95d9b2;
+    --color-tier-trial-line: #27543a;
+
+    --color-tier-small-soft: #17283a;
+    --color-tier-small-ink: #a3cbec;
+    --color-tier-small-line: #2b4763;
+
+    --color-tier-animal-soft: #362a15;
+    --color-tier-animal-ink: #e2c184;
+    --color-tier-animal-line: #5a4724;
+
+    --color-tier-mechanism-soft: #262338;
+    --color-tier-mechanism-ink: #bdb6e0;
+    --color-tier-mechanism-line: #403a5e;
+
+    --color-tier-anecdotal-soft: #34222a;
+    --color-tier-anecdotal-ink: #e2aabe;
+    --color-tier-anecdotal-line: #573945;
+
+    --color-tier-unrated-soft: #292624;
+    --color-tier-unrated-ink: #c0b8b1;
+    --color-tier-unrated-line: #443f3b;
+
+    /* Trial recruitment status */
+    --color-status-open-soft: #15301f;
+    --color-status-open-ink: #92d6a8;
+    --color-status-open-line: #275339;
+
+    --color-status-soon-soft: #172739;
+    --color-status-soon-ink: #a2c8ea;
+    --color-status-soon-line: #2b4763;
+
+    --color-status-closed-soft: #292523;
+    --color-status-closed-ink: #bdb4ad;
+    --color-status-closed-line: #453f3a;
+
+    --color-status-stopped-soft: #37211d;
+    --color-status-stopped-ink: #edaa9c;
+    --color-status-stopped-line: #5b3730;
+
+    --color-status-unknown-soft: #282523;
+    --color-status-unknown-ink: #bcb4ad;
+    --color-status-unknown-line: #443f3b;
+
+    /* Notice panels */
+    --color-notice-soft: #33280f;
+    --color-notice-ink: #e8c887;
+    --color-notice-line: #574521;
+  }
+
+  /*
+   * Form controls otherwise keep the browser's light chrome, which looks
+   * broken against a dark page.
+   */
+  :root {
+    color-scheme: dark;
+  }
 }
 
 @layer base {
