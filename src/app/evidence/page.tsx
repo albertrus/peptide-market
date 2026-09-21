@@ -97,11 +97,12 @@ export default function EvidencePage() {
         </h2>
         <div className="prose-body mt-3 space-y-3 text-ink-muted">
           <p>
-            <strong className="text-ink">ClinicalTrials.gov</strong> is the U.S.
-            National Library of Medicine registry of clinical studies. Trial
-            listings on this site are pulled from its public API and show the
-            sponsor&rsquo;s own registered description. A registration is not
-            peer review: anyone running a study can register one.
+            <strong className="text-ink">ClinicalTrials.gov</strong>{' '}
+            is the U.S. National Library of Medicine registry of clinical
+            studies. Trial listings on this site are pulled from its public API
+            and show the sponsor&rsquo;s own registered description. A
+            registration is not peer review: anyone running a study can
+            register one.
           </p>
           <p>
             <strong className="text-ink">PubMed</strong> indexes biomedical
