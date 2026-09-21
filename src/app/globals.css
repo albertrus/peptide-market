@@ -1,24 +1,155 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens.
+ *
+ * The brief was "more appealing to women" and away from the supplement-store
+ * look. That is handled with a warm paper background, a deep teal primary, a
+ * muted plum accent and a serif display face, not with pink. Every colour is a
+ * token so the palette can be changed in one place.
+ *
+ * Contrast: body and muted text clear 4.5:1 against paper; primary and accent
+ * clear 6.5:1 against white. Every tier and status pair is dark ink on a light
+ * tint for the same reason.
+ *
+ * Dark mode: deliberately not shipped. The previous version declared dark
+ * variables that no component honoured, which left the page half-dark. See
+ * NOTES.md.
+ */
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* Surfaces */
+  --color-paper: #faf8f6;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f3efeb;
+
+  /* Text */
+  --color-ink: #1b1a19;
+  --color-ink-muted: #56504c;
+  --color-ink-subtle: #6e6762;
+
+  /* Lines */
+  --color-line: #e5dfd9;
+  --color-line-strong: #d2c9c1;
+
+  /* Primary: deep teal */
+  --color-primary: #0f5f5c;
+  --color-primary-hover: #0b4a48;
+  --color-primary-soft: #e6f0ef;
+  --color-primary-ink: #0b4a48;
+
+  /* Accent: muted plum */
+  --color-accent: #7d4a63;
+  --color-accent-soft: #f4eaef;
+  --color-accent-ink: #66384f;
+
+  /* Evidence tiers */
+  --color-tier-trial-soft: #e3efe9;
+  --color-tier-trial-ink: #14543c;
+  --color-tier-trial-line: #bcd9cb;
+
+  --color-tier-small-soft: #e6eef5;
+  --color-tier-small-ink: #1d4e70;
+  --color-tier-small-line: #c2d7e6;
+
+  --color-tier-animal-soft: #f6eddc;
+  --color-tier-animal-ink: #6d4a12;
+  --color-tier-animal-line: #e2cea6;
+
+  --color-tier-mechanism-soft: #ebe9f2;
+  --color-tier-mechanism-ink: #453f63;
+  --color-tier-mechanism-line: #cdc8de;
+
+  --color-tier-anecdotal-soft: #f5e9ed;
+  --color-tier-anecdotal-ink: #6e3346;
+  --color-tier-anecdotal-line: #e1c4ce;
+
+  --color-tier-unrated-soft: #efece9;
+  --color-tier-unrated-ink: #4f4945;
+  --color-tier-unrated-line: #d8d1cb;
+
+  /* Trial recruitment status */
+  --color-status-open-soft: #e0efe4;
+  --color-status-open-ink: #14532d;
+  --color-status-open-line: #b7d8c1;
+
+  --color-status-soon-soft: #e7eef7;
+  --color-status-soon-ink: #1e456e;
+  --color-status-soon-line: #c3d5e8;
+
+  --color-status-closed-soft: #eeeae6;
+  --color-status-closed-ink: #4e4741;
+  --color-status-closed-line: #d7cec6;
+
+  --color-status-stopped-soft: #f6e8e6;
+  --color-status-stopped-ink: #75322a;
+  --color-status-stopped-line: #e5c5bf;
+
+  --color-status-unknown-soft: #efeceb;
+  --color-status-unknown-ink: #524c49;
+  --color-status-unknown-line: #d9d2cd;
+
+  /* Notice panels */
+  --color-notice-soft: #fdf4e3;
+  --color-notice-ink: #6a4a11;
+  --color-notice-line: #e9d5ab;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Honour a reader's reduced-motion preference everywhere, not just here. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  /*
+   * A single visible focus treatment for every interactive element. The
+   * previous build relied on the browser default, which disappears against the
+   * coloured buttons.
+   */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 3px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Long-form copy blocks: measured line length, comfortable rhythm. */
+  .prose-body {
+    max-width: 68ch;
+    line-height: 1.7;
+  }
 }
