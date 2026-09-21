@@ -26,12 +26,17 @@ export interface Condition {
   /** One-line neutral framing. Safe to display. */
   summary: string;
   /**
-   * Longer body copy. `needsReview: true` means this is placeholder text that
-   * Albert still has to write or approve. The UI marks it visibly rather than
-   * presenting unreviewed copy as finished.
+   * Longer body copy, one string per paragraph.
+   *
+   * `needsReview: true` means this is placeholder text that Albert still has
+   * to write or approve, and the UI marks it visibly rather than presenting
+   * unreviewed copy as finished.
+   *
+   * Copy here describes the condition and what this page aggregates. It must
+   * never describe a peptide as a treatment for it.
    */
   overview: {
-    body: string;
+    body: string[];
     needsReview: boolean;
   };
   queries: ConditionQueries;
@@ -50,9 +55,12 @@ export const conditions: Condition[] = [
     summary:
       'Tissue similar to the uterine lining growing outside the uterus. Affects roughly 1 in 10 women and people assigned female at birth of reproductive age.',
     overview: {
-      body:
-        'PLACEHOLDER: Albert to write the condition overview. Keep it descriptive of the condition and of what this page aggregates. Do not describe any peptide as a treatment for endometriosis. A good shape for this section: what the condition is, why primary sources are hard for patients to find, and what the trial and literature lists below are drawn from.',
-      needsReview: true,
+      body: [
+        'The World Health Organization puts the number affected at around 10 percent of reproductive age women worldwide, roughly 190 million people, along with transgender men and non-binary people who menstruate. The growths cause inflammation and scar tissue. The causes are not known, there is no cure, and WHO gives the average time from first symptoms to diagnosis as somewhere between four and twelve years.',
+        'That delay is why this page exists. Spending years being told the pain is normal leaves people doing their own research, usually through whatever ranks highest in a search, which is often written by someone with something to sell. The trials below come from ClinicalTrials.gov and the literature from PubMed. Every entry links straight to the source, so you can read the study itself instead of a summary of it written by a vendor.',
+        'One thing worth knowing while you read: WHO notes that endometriosis is associated with immune system dysregulation, and that people who have it show higher rates of lupus, multiple sclerosis and inflammatory bowel disease. That overlap is part of why this site tracks autoimmune conditions alongside it.',
+      ],
+      needsReview: false,
     },
     queries: {
       trialCondition: 'endometriosis',
@@ -68,9 +76,12 @@ export const conditions: Condition[] = [
     summary:
       'Conditions in which the immune system targets the body’s own tissue. Most autoimmune diagnoses fall disproportionately on women.',
     overview: {
-      body:
-        'PLACEHOLDER: Albert to write the condition overview. This page covers autoimmune conditions as a group, so the copy should say plainly that trial and literature results span many different diagnoses and that relevance varies a great deal between them. Do not describe any peptide as a treatment.',
-      needsReview: true,
+      body: [
+        'The National Institute of Environmental Health Sciences counts more than 80 distinct conditions under that heading, from widely recognised ones like type 1 diabetes, multiple sclerosis, lupus and rheumatoid arthritis to rare ones that take years to identify. Most have no cure, and NIEHS lists sex among the characteristics linked to developing one.',
+        'This page covers that whole group at once, which is both what makes it useful and what limits it. A trial recruiting for rheumatoid arthritis tells you very little about Hashimoto\u2019s. Treat what follows as a way into the literature rather than as a set of results that all apply to your diagnosis, and narrow the search on the source once you find something relevant.',
+        'The trials come from ClinicalTrials.gov and the literature from PubMed. Every entry links to the source.',
+      ],
+      needsReview: false,
     },
     queries: {
       trialCondition: 'autoimmune disease',

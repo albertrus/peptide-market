@@ -99,8 +99,9 @@ export default function DisclosuresPage() {
               &ldquo;Not yet rated&rdquo;.
             </li>
             <li>
-              Condition overview copy is unwritten and is marked as placeholder
-              on the pages where it appears.
+              Condition overviews cite the World Health Organization and the
+              National Institute of Environmental Health Sciences for the
+              condition itself. They are not written or reviewed by a clinician.
             </li>
           </ul>
         </div>

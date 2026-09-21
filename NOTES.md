@@ -235,17 +235,25 @@ nothing was saved and warns against entering a real password.
 ## 8. Content boundary
 
 No page states or implies that a peptide treats endometriosis or any autoimmune
-condition. Where body copy was needed and I could not write it truthfully, there
-is a marked placeholder instead:
+condition.
 
-- Both condition overviews in `src/lib/conditions.ts` (`needsReview: true`),
-  rendered inside a visible "Unreviewed placeholder copy" callout.
-- The contact route on `/disclosures`.
+**Update (later session, at Albert's request):** both condition overviews are
+now written and live (`needsReview: false`). They describe the condition, why
+primary sources are hard for patients to find, and what the lists below are
+drawn from. They make no claim about any peptide. Facts are sourced from the
+WHO endometriosis fact sheet and the NIEHS autoimmune topic page, both checked
+against the live pages rather than written from memory. Notably WHO puts the
+diagnostic delay at four to twelve years, not the seven to ten figure that gets
+quoted second-hand.
 
-The condition pages currently show that callout to visitors. That is deliberate,
-so an unfinished page cannot be mistaken for a finished one, but it does mean
-**those two paragraphs are the highest-value thing you can write next.** Set
-`needsReview: false` and it renders as normal body copy.
+They are still not clinician-reviewed, and `/disclosures` says so. Setting
+`needsReview: true` on either one puts it back behind the "Unreviewed
+placeholder copy" callout.
+
+The one remaining marked placeholder is the contact route on `/disclosures`.
+
+`overview.body` is now `string[]`, one entry per paragraph, so real copy sets
+properly instead of running together in a single block.
 
 ---
 
@@ -292,7 +300,8 @@ Reddit is the one source that fails, for the credential reason in section 1.
 
 ## 11. What I would do next, in order
 
-1. **Write the two condition overviews.** Highest value, smallest effort.
+1. ~~Write the two condition overviews.~~ Done. Read them and check you are
+   happy with the voice before you send anyone to the site.
 2. **Assign the six evidence tiers.** The pages now give you the sources to do it.
 3. **Reddit credentials**, or drop the community panel. Right now every condition
    page carries a visible error block.

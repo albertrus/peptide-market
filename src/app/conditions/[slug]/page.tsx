@@ -92,12 +92,18 @@ export default async function ConditionPage({
             title="Unreviewed placeholder copy"
             className="mt-6"
           >
-            {condition.overview.body}
+            {condition.overview.body.map((paragraph, i) => (
+              <p key={i} className={i > 0 ? 'mt-3' : undefined}>
+                {paragraph}
+              </p>
+            ))}
           </Callout>
         ) : (
-          <p className="prose-body mt-6 text-ink-muted">
-            {condition.overview.body}
-          </p>
+          <div className="prose-body mt-6 space-y-4 text-ink-muted">
+            {condition.overview.body.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
         )}
 
         <nav
