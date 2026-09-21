@@ -139,13 +139,15 @@ export interface TrialQuery {
   condition?: string;
   /** Intervention term, for example "semaglutide". */
   intervention?: string;
+  /** Free-text search across the whole record. Used by /search. */
+  term?: string;
   /** Restrict to studies a patient could still join. */
   openOnly?: boolean;
   pageSize?: number;
 }
 
-function uiSearchUrl({ condition, intervention }: TrialQuery): string {
-  return buildUrl(UI, { cond: condition, intr: intervention });
+function uiSearchUrl({ condition, intervention, term }: TrialQuery): string {
+  return buildUrl(UI, { cond: condition, intr: intervention, term });
 }
 
 /** Sorts trials a patient can act on to the top, then most recent first. */
@@ -162,6 +164,7 @@ export async function searchTrials(
   const url = buildUrl(API, {
     'query.cond': query.condition,
     'query.intr': query.intervention,
+    'query.term': query.term,
     'filter.overallStatus': query.openOnly ? OPEN_STATUSES : undefined,
     sort: 'LastUpdatePostDate:desc',
     countTotal: 'true',
@@ -200,6 +203,7 @@ export async function countTrials(
   const url = buildUrl(API, {
     'query.cond': query.condition,
     'query.intr': query.intervention,
+    'query.term': query.term,
     countTotal: 'true',
     pageSize: 1,
     fields: 'protocolSection.identificationModule.nctId',

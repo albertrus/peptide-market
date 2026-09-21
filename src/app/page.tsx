@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Callout from '@/components/Callout';
 import ConditionCard from '@/components/ConditionCard';
+import SearchForm from '@/components/SearchForm';
 import EvidenceBadge from '@/components/EvidenceBadge';
 import { conditions } from '@/lib/conditions';
 import { EVIDENCE_TIERS_BY_STRENGTH } from '@/lib/evidence';
@@ -43,6 +44,13 @@ export default function Home() {
           >
             How we rate evidence
           </Link>
+        </div>
+
+        <div className="mt-8 border-t border-line pt-6">
+          <p className="mb-3 text-sm text-ink-muted">
+            Or search both registries directly, for anything at all:
+          </p>
+          <SearchForm size="sm" />
         </div>
       </section>
 

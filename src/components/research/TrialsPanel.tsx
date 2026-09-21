@@ -26,9 +26,10 @@ export default async function TrialsPanel({
   description,
   condition,
   intervention,
+  term,
   pageSize = 10,
 }: TrialsPanelProps) {
-  const query: TrialQuery = { condition, intervention };
+  const query: TrialQuery = { condition, intervention, term };
 
   const [openResult, allCount] = await Promise.all([
     searchTrials({ ...query, openOnly: true, pageSize }),

@@ -358,8 +358,7 @@ Reddit is the one source that fails, for the credential reason in section 1.
 4. **Decide about the vendor listings.** Either wire a real source for price and
    stock, or cut the table and let the site be purely a research directory. The
    placeholder banner is not a long-term answer.
-5. **Search across conditions and peptides.** The data layer already takes
-   arbitrary query terms, so this is mostly UI.
+5. ~~Search across conditions and peptides.~~ Done. See below.
 6. ~~Save trials and papers, not just vendors.~~ Done. See below.
 7. **Dark mode**, properly, token by token.
 8. **Real auth.** Credentials are mock users in `src/lib/auth.ts` and
@@ -389,6 +388,32 @@ actually needs to keep.
   PMIDs travel better than links, because a clinician can look either up.
 
 Still device-local. Saving across devices needs the real auth in item 8.
+
+---
+
+## 13. Search (later session)
+
+`/search?q=...` runs a free-text query against both registries, so the site is
+no longer limited to the two curated conditions. It is linked from the nav and
+sits under the hero on the home page.
+
+- Plain GET form, no client JavaScript. It works with JS off, the result is a
+  real URL you can bookmark or send to a clinician, and the back button
+  behaves. For a search that hands off to two government registries, that is
+  the right amount of machinery.
+- `TrialQuery` gained a `term` field mapping to ClinicalTrials.gov
+  `query.term`; PubMed takes the string directly. Queries are trimmed and
+  capped at 200 characters before being forwarded upstream.
+- Each panel gets a Suspense `key` tied to the query, so changing the search
+  shows skeletons again instead of the previous results sitting there stale.
+- Results carry no evidence tier, and the page says so. Tiers are assigned per
+  peptide after review; an arbitrary search result has not been reviewed by
+  anyone.
+
+Worth noting what it reveals: searching "endometriosis semaglutide" returns
+zero open trials and one paper. That emptiness is real information, and the
+empty state says as much rather than looking broken.
+
 
 ---
 

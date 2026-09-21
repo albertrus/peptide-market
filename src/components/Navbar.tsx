@@ -19,6 +19,7 @@ import { conditions } from '@/lib/conditions';
 
 const staticLinks = [
   { href: '/peptides', label: 'Peptides' },
+  { href: '/search', label: 'Search' },
   { href: '/vendors', label: 'Vendors' },
   { href: '/evidence', label: 'How we rate evidence' },
 ];
