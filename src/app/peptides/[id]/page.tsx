@@ -117,6 +117,12 @@ export default async function PeptidePage({
         )}
       </header>
 
+      {peptide.researchCaveat && (
+        <Callout tone="notice" title="Before you read the research below">
+          {peptide.researchCaveat}
+        </Callout>
+      )}
+
       <Suspense fallback={<SectionSkeleton rows={3} />}>
         <TrialsPanel
           id="trials"

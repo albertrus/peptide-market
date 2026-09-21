@@ -13,6 +13,10 @@ export const metadata: Metadata = {
 
 export default function EvidencePage() {
   const unrated = peptides.filter((p) => p.evidenceTier === 'unrated');
+  const byTier = EVIDENCE_TIERS_BY_STRENGTH.map((tier) => ({
+    tier,
+    peptides: peptides.filter((p) => p.evidenceTier === tier.tier),
+  })).filter((group) => group.peptides.length > 0);
 
   return (
     <div className="space-y-12">
@@ -59,35 +63,51 @@ export default function EvidencePage() {
         </dl>
       </section>
 
-      <section aria-labelledby="unrated">
-        <h2 id="unrated" className="text-2xl font-semibold text-ink">
+      <section aria-labelledby="ratings">
+        <h2 id="ratings" className="text-2xl font-semibold text-ink">
           Current ratings
         </h2>
+        <p className="prose-body mt-2 text-ink-muted">
+          Assigned in September 2026 from registered trial status on
+          ClinicalTrials.gov and publication-type counts on PubMed. The test for
+          a human trial rating was a completed, registered, controlled trial in
+          people. A registration on its own is a statement of intent, not a
+          result. Each peptide page gives the reasoning for its own rating.
+        </p>
 
-        {unrated.length === 0 ? (
-          <p className="prose-body mt-2 text-ink-muted">
-            Every peptide on the site has been rated.
+        <dl className="mt-6 space-y-4">
+          {byTier.map(({ tier, peptides: group }) => (
+            <div
+              key={tier.tier}
+              className="rounded-lg border border-line bg-surface p-5"
+            >
+              <dt className="mb-3 flex flex-wrap items-center gap-2">
+                <EvidenceBadge tier={tier.tier} size="md" />
+                <span className="text-sm text-ink-muted">{tier.summary}</span>
+              </dt>
+              <dd>
+                <ul className="flex flex-wrap gap-2">
+                  {group.map((peptide) => (
+                    <li key={peptide.id}>
+                      <Link
+                        href={`/peptides/${peptide.id}`}
+                        className="inline-block rounded-full border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:border-primary hover:text-primary"
+                      >
+                        {peptide.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        {unrated.length > 0 && (
+          <p className="prose-body mt-4 text-sm text-ink-subtle">
+            {unrated.length} of {peptides.length} peptides have not been
+            reviewed yet.
           </p>
-        ) : (
-          <>
-            <p className="prose-body mt-2 text-ink-muted">
-              {unrated.length} of {peptides.length} peptides have not been
-              reviewed against the tiers yet. They are listed here rather than
-              quietly shown as unrated on their own pages.
-            </p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {unrated.map((peptide) => (
-                <li key={peptide.id}>
-                  <Link
-                    href={`/peptides/${peptide.id}`}
-                    className="inline-block rounded-full border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:border-primary hover:text-primary"
-                  >
-                    {peptide.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
         )}
       </section>
 

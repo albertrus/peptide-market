@@ -95,8 +95,11 @@ export default function DisclosuresPage() {
               labelled as such wherever they appear.
             </li>
             <li>
-              No peptide has been assigned an evidence tier yet. All of them read
-              &ldquo;Not yet rated&rdquo;.
+              Evidence tiers were assigned in September 2026 from registered
+              trial status and publication-type counts. They are a judgement
+              about a body of evidence, made by the site rather than by a
+              clinician, and the underlying counts drift as new work is
+              published.
             </li>
             <li>
               Condition overviews cite the World Health Organization and the

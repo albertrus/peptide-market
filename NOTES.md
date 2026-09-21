@@ -77,20 +77,55 @@ real tier that renders as "Not yet rated" and says, in the UI, that an unrated
 entry means unreviewed and not neutral. `/evidence` lists every unrated peptide
 publicly. That felt more honest than a silent gap, and it is easy to reverse.
 
-### TODO for you: assign these six
+### Tiers are now assigned
 
-All six are `unrated` in `src/lib/peptides.ts`. Set `evidenceTier` and replace
-`evidenceNote` with a sentence saying why:
+**Update (later session, at Albert's request).** All six were assigned from
+data, not from memory or vibes. Method: registered trial status and phase from
+the ClinicalTrials.gov API, plus PubMed publication-type counts
+(`clinical trial[pt]`, `randomized controlled trial[pt]`, `humans[mh]`,
+`animals[mh] NOT humans[mh]`). Each peptide's `evidenceNote` carries the
+numbers and the reasoning.
 
-- [ ] `bpc-157`
-- [ ] `tb-500`
-- [ ] `cjc-1295`
-- [ ] `ipamorelin`
-- [ ] `semaglutide`
-- [ ] `tirzepatide`
+| Peptide | Tier | Why |
+|---|---|---|
+| Semaglutide | Human trial | 26 Phase 3 registered, 300+ RCTs indexed, FDA approved |
+| Tirzepatide | Human trial | 17 Phase 3 registered, 130+ RCTs indexed, FDA approved |
+| Ipamorelin | Human trial | 2 placebo-controlled Phase 2 trials completed |
+| BPC-157 | Small human study | 0 published controlled trials; 109 of 230 papers animal-only |
+| TB-500 | Small human study | Trials shown are of a different molecule (see below) |
+| CJC-1295 | Small human study | 2 small studies, main one 2006; only registered trial terminated |
 
-The trial and literature panels on each peptide page are there to make this a
-reading job rather than a guessing job.
+**I sharpened the tier definitions to make these assignments honest.** On the
+original wording, "registered ... or are underway" qualified for the top tier,
+which put all six peptides in it. A tier system where everything scores top
+tells a reader nothing and would have let BPC-157 look comparable to
+semaglutide. `human-trial` now requires a **completed** controlled trial, and
+`small-human-study` explicitly covers trials that are registered but have not
+reported. A registration is a statement of intent, not a result.
+
+**Two findings worth your attention:**
+
+1. **TB-500 is not what its trials are about.** The Phase 2 and Phase 3 studies
+   that the site surfaces for TB-500 study full-length thymosin beta-4, mostly
+   as an eye drop (RGN-259) or for wound healing. TB-500 is a fragment sold as
+   a research chemical. Searched strictly, TB-500 itself has 28 indexed papers
+   and one tagged as a trial, against 1,035 for full-length Tβ4. Showing those
+   trials without saying so would have been the most misleading thing on the
+   site.
+2. **BPC-157 has no published controlled human result at all.** Two trials are
+   registered and active as of September 2026 and neither has reported. The
+   literature is dominated by rat studies.
+
+Both of those are handled by a new optional `researchCaveat` field on
+`Peptide`, rendered in a callout directly above the research panels. Semaglutide
+and tirzepatide carry one too, saying their trials are in diabetes and obesity
+rather than in the conditions this site covers.
+
+**These are my readings, not a clinician's.** The one most worth arguing with is
+ipamorelin at `human-trial`: its trials genuinely completed and were
+placebo-controlled, but the whole literature is 54 papers and the programme was
+abandoned. If you think completed-but-abandoned should not outrank BPC-157's
+active-but-unreported, that is a reasonable position and it is a one-word change.
 
 ---
 
@@ -302,7 +337,8 @@ Reddit is the one source that fails, for the credential reason in section 1.
 
 1. ~~Write the two condition overviews.~~ Done. Read them and check you are
    happy with the voice before you send anyone to the site.
-2. **Assign the six evidence tiers.** The pages now give you the sources to do it.
+2. ~~Assign the six evidence tiers.~~ Done, from data. Read the notes and
+   push back on any you disagree with, particularly ipamorelin.
 3. **Reddit credentials**, or drop the community panel. Right now every condition
    page carries a visible error block.
 4. **Decide about the vendor listings.** Either wire a real source for price and

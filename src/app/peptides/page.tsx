@@ -31,12 +31,12 @@ export default function PeptidesPage() {
         </p>
       </header>
 
-      <Callout tone="notice" title="Evidence tiers are not assigned yet">
-        Every peptide below currently reads &ldquo;Not yet rated&rdquo;. That is
-        a real state, not a placeholder that got missed: nobody has reviewed
-        these against the tier definitions. Treat an unrated entry as unreviewed,
-        not as neutral.{' '}
-        <Link href="/evidence">How the tiers work</Link>.
+      <Callout title="What the tiers mean">
+        Each peptide carries a tier describing the strongest kind of study that
+        exists for it, not whether it works. A compound can sit at
+        &ldquo;human trial&rdquo; because a controlled trial was run and found
+        nothing.{' '}
+        <Link href="/evidence">How the tiers are assigned</Link>.
       </Callout>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

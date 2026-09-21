@@ -43,18 +43,18 @@ export const EVIDENCE_TIER_META: Record<EvidenceTier, EvidenceTierMeta> = {
   'human-trial': {
     tier: 'human-trial',
     label: 'Human trial',
-    summary: 'Registered controlled trials in people exist.',
+    summary: 'Controlled trials in people have been completed.',
     definition:
-      'One or more registered, controlled clinical trials in human participants have been run or are underway. Registered trials are the strongest class of evidence listed here. It does not mean the trials were positive, large, or relevant to every use.',
+      'One or more registered, controlled clinical trials in human participants have been completed. This is the strongest class of evidence listed here. It does not mean the trials were positive, large, or relevant to every use, and it does not mean any of them studied the condition you are reading about. A well-run trial that found nothing still counts.',
     rank: 5,
     className: 'bg-tier-trial-soft text-tier-trial-ink border-tier-trial-line',
   },
   'small-human-study': {
     tier: 'small-human-study',
     label: 'Small human study',
-    summary: 'Small or uncontrolled studies in people exist.',
+    summary: 'Small, uncontrolled, or unreported human work.',
     definition:
-      'Published work in human participants exists, but at small scale, without a control group, or as case reports. Findings at this tier are preliminary and frequently fail to replicate at larger scale.',
+      'Published work in human participants exists, but at small scale, without a control group, or as case reports. Trials may be registered and underway without having reported yet; a registration is a statement of intent, not a result. Findings at this tier are preliminary and frequently fail to replicate at larger scale.',
     rank: 4,
     className: 'bg-tier-small-soft text-tier-small-ink border-tier-small-line',
   },
